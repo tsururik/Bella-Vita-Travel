@@ -2,7 +2,7 @@
 // These three values are public by design: the Yandex password stays inside EmailJS, never on the site.
 // While any value is empty, booking works as a local demo and no email is sent.
 window.BELLA_VITA_EMAIL = {
-  serviceId: '',
-  templateId: '',
+  serviceId: 'bella_vita',
+  templateId: 'template_7g7gkcn',
   publicKey: 'jbG2SLZar9i3z0xJ8'
 };
