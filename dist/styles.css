@@ -121,3 +121,19 @@
 .ticket-barcode{width:110px;margin:0}
 .ticket-olive{display:none}
 }
+/* Vector icons (SVG symbols in index.html) render the same on every device */
+.icon{display:inline-block;width:1em;height:1em;vertical-align:-.14em;flex:none;overflow:visible}
+.pill span,.back-link span,.nav-book span{display:inline-flex;align-items:center}
+.nav-book .icon{width:1.25em;height:1.25em}
+.footer a .icon{width:1.3em;height:1.3em;margin-left:4px}
+.close-dialog span{display:inline-flex;font-size:18px}
+.outline-circle{display:inline-grid;place-items:center}
+.outline-circle .icon{font-size:18px}
+.circle-arrow .icon{font-size:24px}
+.cta-arrow i{inset:0;display:grid;place-items:center}
+.hero-star .icon,.package-star .icon{display:block}
+.loader-runway span{top:-11px;line-height:0}
+.plane-glyph{width:1.2em;height:1.1em}
+.train-dot{top:-15px;padding:0;background:none;line-height:0}
+.train-icon{display:block;width:58px;height:14.5px}
+@media(max-width:600px){.train-icon{width:46px;height:11.5px}.train-dot{top:-12px}}
