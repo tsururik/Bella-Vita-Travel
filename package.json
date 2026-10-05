@@ -1,0 +1,1 @@
+{"name":"bella-vita-travel","version":"1.0.0","private":true,"description":"Cinematic Italy travel experience — plain HTML, CSS and JavaScript","scripts":{"dev":"node server.mjs","start":"node server.mjs"}}
