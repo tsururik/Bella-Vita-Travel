@@ -306,7 +306,7 @@
     const status=$('#email-status');
     if(emailReady){
       status.textContent=`Sending your ticket to ${email}…`;
-      emailTicket({to_email:email,passenger:name,first_name:firstName,last_name:lastName,booking_ref:reference,
+      emailTicket({to_email:email,email,passenger:name,first_name:firstName,last_name:lastName,booking_ref:reference,
         departure:fmt(date),return_date:fmt(returnDate),travellers:`${travelers} traveller${travelers>1?'s':''}`,total:euros(travelers*1650),
         route:'Minsk → Vilnius → Rome → Florence → Venice → Vilnius → Minsk'})
         .then(()=>{status.textContent=`Your ticket is on its way to ${email}.`;})

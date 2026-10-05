@@ -1,13 +1,23 @@
 <!-- EmailJS template for the ticket email. Paste into EmailJS → Email Templates → Content → Edit Content → Code.
      Variables come from dist/app.js: passenger, first_name, last_name, booking_ref, departure, return_date, travellers, total, route.
-     Ticket artwork is served from the published site (dist/assets/ticket). -->
+     Ticket artwork is served from the published site (dist/assets/ticket).
+     The ticket is a fluid layout: on wide screens the stub sits on the right, on phones it wraps under the ticket.
+     The media query only polishes the phone view; without it the layout still fits the screen. -->
+<style>
+  @media only screen and (max-width: 620px) {
+    .tk-main { max-width: none !important; border-right: 0 !important; border-bottom: 2px dashed #9a9f88 !important; }
+    .tk-stub { max-width: none !important; }
+    .tk-art { display: none !important; }
+    .tk-title { font-size: 30px !important; }
+  }
+</style>
 <div style="margin:0;padding:0;background:#222b26;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#222b26;">
   <tr>
-    <td align="center" style="padding:28px 12px;">
+    <td align="center" style="padding:24px 10px;">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;color:#f1eee5;">
         <tr>
-          <td style="padding:0 4px 22px 4px;font-family:Georgia,'Times New Roman',serif;font-size:20px;letter-spacing:4px;color:#f1eee5;">
+          <td style="padding:0 4px 20px 4px;font-family:Georgia,'Times New Roman',serif;font-size:20px;letter-spacing:4px;color:#f1eee5;">
             BUON VIAGGIO
             <div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;letter-spacing:3px;color:#c8ad7d;padding-top:4px;">BELLA VITA TRAVEL</div>
           </td>
@@ -18,90 +28,87 @@
           </td>
         </tr>
         <tr>
-          <td style="padding:32px 4px 6px 4px;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:3px;color:#c8ad7d;">
+          <td style="padding:30px 4px 6px 4px;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:3px;color:#c8ad7d;">
             A LITTLE DREAM, READY FOR TAKE-OFF
           </td>
         </tr>
         <tr>
-          <td style="padding:0 4px;font-family:Georgia,'Times New Roman',serif;font-size:38px;line-height:1.15;color:#f1eee5;">
+          <td class="tk-title" style="padding:0 4px;font-family:Georgia,'Times New Roman',serif;font-size:38px;line-height:1.15;color:#f1eee5;">
             Your Italian journey <i style="color:#c8ceb2;">begins.</i>
           </td>
         </tr>
         <tr>
-          <td style="padding:12px 4px 26px 4px;font-family:Georgia,'Times New Roman',serif;font-size:20px;font-style:italic;color:#e3d7b5;">
+          <td style="padding:12px 4px 24px 4px;font-family:Georgia,'Times New Roman',serif;font-size:20px;font-style:italic;color:#e3d7b5;">
             Buon viaggio, {{first_name}}.
           </td>
         </tr>
         <tr>
-          <td>
-            <!-- Ticket -->
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3ede0;color:#1f2a22;border-radius:14px;">
-              <tr>
-                <td valign="top" style="padding:22px 20px 16px 24px;">
-                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                    <tr>
-                      <td valign="middle" style="font-family:Georgia,'Times New Roman',serif;color:#1f2a22;white-space:nowrap;letter-spacing:1px;">
-                        <span style="font-size:30px;">B</span><span style="font-size:23px;">UON</span> <span style="font-size:30px;">V</span><span style="font-size:23px;">IAGGIO</span>
-                      </td>
-                      <td valign="middle" width="22" style="padding-left:12px;">
-                        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-                          <td width="7" height="12" bgcolor="#4d8a55" style="width:7px;height:12px;background:#4d8a55;font-size:0;line-height:0;">&nbsp;</td>
-                          <td width="7" height="12" bgcolor="#fbf8f0" style="width:7px;height:12px;background:#fbf8f0;font-size:0;line-height:0;">&nbsp;</td>
-                          <td width="7" height="12" bgcolor="#c4473c" style="width:7px;height:12px;background:#c4473c;font-size:0;line-height:0;">&nbsp;</td>
-                        </tr></table>
-                      </td>
-                      <td valign="middle" style="padding-left:8px;font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#3d4236;white-space:nowrap;">ITALIAN ESCAPE</td>
-                      <td valign="middle" align="right" width="30">
-                        <img src="https://tsururik.github.io/Bella-Vita-Travel/assets/ticket/plane.png" width="26" alt="" style="display:block;width:26px;height:auto;border:0;">
-                      </td>
-                    </tr>
-                  </table>
-                  <div style="border-top:1px solid #d3ccb9;margin:14px 0 0 0;font-size:0;line-height:0;">&nbsp;</div>
-                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                    <tr>
-                      <td valign="top" style="padding-top:14px;">
-                        <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#5c6151;">PASSENGER</div>
-                        <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.2;color:#1f2a22;padding:5px 0 14px 0;">{{passenger}}</div>
-                        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                          <tr>
-                            <td valign="top" style="padding-right:18px;">
-                              <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#5c6151;">DESTINATION</div>
-                              <div style="font-family:Georgia,'Times New Roman',serif;font-size:19px;color:#1f2a22;padding-top:5px;">ITALY</div>
-                            </td>
-                            <td valign="top" style="padding-left:18px;border-left:1px solid #d3ccb9;">
-                              <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#5c6151;">DEPARTURE</div>
-                              <div style="font-family:Georgia,'Times New Roman',serif;font-size:19px;color:#1f2a22;padding-top:5px;white-space:nowrap;">{{departure}}</div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                      <td valign="bottom" align="right" width="140" style="width:140px;padding-top:8px;">
-                        <img src="https://tsururik.github.io/Bella-Vita-Travel/assets/ticket/illustration.png" width="140" alt="" style="display:block;width:140px;height:auto;border:0;">
-                      </td>
-                    </tr>
-                  </table>
-                  <div style="border-top:1px solid #d3ccb9;margin:6px 0 0 0;font-size:0;line-height:0;">&nbsp;</div>
-                  <div style="padding-top:11px;font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:2px;color:#3d4236;line-height:1.8;">
-                    RETURN <span style="font-family:Georgia,'Times New Roman',serif;font-size:14px;letter-spacing:0;color:#1f2a22;">{{return_date}}</span> &middot; <span style="text-transform:uppercase;">{{travellers}}</span> &middot; 8 DAYS / 7 NIGHTS
+          <!-- Ticket -->
+          <td align="center" style="background:#f3ede0;border-radius:14px;font-size:0;text-align:center;">
+            <div class="tk-main" style="display:inline-block;vertical-align:top;width:100%;max-width:430px;box-sizing:border-box;border-right:2px dashed #9a9f88;text-align:left;font-size:14px;color:#1f2a22;">
+              <div style="padding:22px 20px 16px 22px;">
+                <div style="font-size:0;">
+                  <div style="display:inline-block;vertical-align:middle;padding:0 14px 6px 0;font-family:Georgia,'Times New Roman',serif;font-size:23px;color:#1f2a22;letter-spacing:1px;white-space:nowrap;">
+                    <span style="font-size:30px;">B</span><span style="font-size:23px;">UON</span> <span style="font-size:30px;">V</span><span style="font-size:23px;">IAGGIO</span>
                   </div>
-                  <div style="padding-top:4px;font-family:Georgia,'Times New Roman',serif;font-size:13px;font-style:italic;color:#5c6151;">
-                    Registration confirmation for Buon Viaggio students.
+                  <div style="display:inline-block;vertical-align:middle;padding-bottom:6px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td valign="middle">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+                            <td width="7" height="12" bgcolor="#4d8a55" style="width:7px;height:12px;background:#4d8a55;font-size:0;line-height:0;">&nbsp;</td>
+                            <td width="7" height="12" bgcolor="#fbf8f0" style="width:7px;height:12px;background:#fbf8f0;font-size:0;line-height:0;">&nbsp;</td>
+                            <td width="7" height="12" bgcolor="#c4473c" style="width:7px;height:12px;background:#c4473c;font-size:0;line-height:0;">&nbsp;</td>
+                          </tr></table>
+                        </td>
+                        <td style="padding:0 12px 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#3d4236;white-space:nowrap;">ITALIAN ESCAPE</td>
+                        <td><img src="https://tsururik.github.io/Bella-Vita-Travel/assets/ticket/plane.png" width="26" alt="" style="display:block;width:26px;height:auto;border:0;"></td>
+                      </tr>
+                    </table>
                   </div>
-                </td>
-                <td valign="middle" align="center" width="140" style="width:140px;padding:18px 12px;border-left:2px dashed #9a9f88;text-align:center;">
-                  <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#5c6151;">STATUS</div>
-                  <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;letter-spacing:1px;color:#5d6b4c;padding:5px 0 12px 0;">CONFIRMED</div>
-                  <img src="https://tsururik.github.io/Bella-Vita-Travel/assets/ticket/barcode.png" width="112" alt="" style="display:block;width:112px;height:auto;border:0;margin:0 auto;">
-                  <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#5c6151;padding-top:10px;">STUDENT 2027</div>
-                  <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:2px;color:#5c6151;padding-top:4px;">{{booking_ref}}</div>
-                  <img src="https://tsururik.github.io/Bella-Vita-Travel/assets/ticket/olive.png" width="28" alt="" style="display:block;width:28px;height:auto;border:0;margin:12px auto 0 auto;">
-                </td>
-              </tr>
-            </table>
+                </div>
+                <div style="border-top:1px solid #d3ccb9;margin-top:8px;font-size:0;line-height:0;">&nbsp;</div>
+                <div style="font-size:0;">
+                  <div style="display:inline-block;vertical-align:bottom;width:100%;max-width:262px;padding-top:14px;">
+                    <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#5c6151;">PASSENGER</div>
+                    <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.2;color:#1f2a22;padding:5px 0 14px 0;">{{passenger}}</div>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td valign="top" style="padding-right:16px;">
+                          <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:2px;color:#5c6151;">DESTINATION</div>
+                          <div style="font-family:Georgia,'Times New Roman',serif;font-size:19px;color:#1f2a22;padding-top:5px;">ITALY</div>
+                        </td>
+                        <td valign="top" style="padding-left:16px;border-left:1px solid #d3ccb9;">
+                          <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:2px;color:#5c6151;">DEPARTURE</div>
+                          <div style="font-family:Georgia,'Times New Roman',serif;font-size:19px;color:#1f2a22;padding-top:5px;white-space:nowrap;">{{departure}}</div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="tk-art" style="display:inline-block;vertical-align:bottom;width:100%;max-width:124px;text-align:right;">
+                    <img src="https://tsururik.github.io/Bella-Vita-Travel/assets/ticket/illustration.png" width="124" alt="" style="display:inline-block;width:124px;height:auto;border:0;">
+                  </div>
+                </div>
+                <div style="border-top:1px solid #d3ccb9;margin-top:6px;font-size:0;line-height:0;">&nbsp;</div>
+                <div style="padding-top:11px;font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:2px;color:#3d4236;line-height:1.9;">
+                  RETURN <span style="font-family:Georgia,'Times New Roman',serif;font-size:14px;letter-spacing:0;color:#1f2a22;">{{return_date}}</span> &middot; <span style="text-transform:uppercase;">{{travellers}}</span> &middot; 8 DAYS / 7 NIGHTS
+                </div>
+                <div style="padding-top:4px;font-family:Georgia,'Times New Roman',serif;font-size:13px;font-style:italic;color:#5c6151;">
+                  Registration confirmation for Buon Viaggio students.
+                </div>
+              </div>
+            </div><div class="tk-stub" style="display:inline-block;vertical-align:middle;width:100%;max-width:150px;box-sizing:border-box;padding:20px 12px;text-align:center;font-size:14px;">
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#5c6151;">STATUS</div>
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;letter-spacing:1px;color:#5d6b4c;padding:5px 0 12px 0;">CONFIRMED</div>
+              <img src="https://tsururik.github.io/Bella-Vita-Travel/assets/ticket/barcode.png" width="112" alt="" style="display:block;width:112px;height:auto;border:0;margin:0 auto;">
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:3px;color:#5c6151;padding-top:10px;">STUDENT 2027</div>
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:8px;letter-spacing:2px;color:#5c6151;padding-top:4px;">{{booking_ref}}</div>
+              <img src="https://tsururik.github.io/Bella-Vita-Travel/assets/ticket/olive.png" width="28" alt="" style="display:block;width:28px;height:auto;border:0;margin:12px auto 0 auto;">
+            </div>
           </td>
         </tr>
         <tr>
-          <td style="padding:24px 4px 6px 4px;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:2px;color:#c3c8b2;">
+          <td style="padding:24px 4px 6px 4px;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:2px;line-height:1.8;color:#c3c8b2;">
             {{route}}
           </td>
         </tr>

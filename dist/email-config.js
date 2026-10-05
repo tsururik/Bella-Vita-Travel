@@ -4,5 +4,5 @@
 window.BELLA_VITA_EMAIL = {
   serviceId: '',
   templateId: '',
-  publicKey: ''
+  publicKey: 'jbG2SLZar9i3z0xJ8'
 };

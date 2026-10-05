@@ -71,7 +71,7 @@ python3 -m http.server 4173 --directory dist
 2. **EmailJS: сервис.** Зарегистрироваться на emailjs.com → Email Services → Add New Service. Если в списке есть Yandex — выбрать его, иначе «SMTP server»: хост `smtp.yandex.ru`, порт `465`, SSL включён. Логин — `krokbuslikovAI@ya.ru`, пароль — пароль приложения из шага 1. Скопировать **Service ID**.
 3. **EmailJS: шаблон.** Email Templates → Create New Template:
    - **Subject:** `Buon viaggio, {{first_name}}! Your Italian journey ticket {{booking_ref}}`
-   - **To Email:** `{{to_email}}`
+   - **To Email:** `{{to_email}}` (или `{{email}}` — сайт передаёт оба)
    - **From Name:** `Bella Vita Travel`
    - **Reply To:** `krokbuslikovAI@ya.ru`
    - **Bcc** (по желанию): `krokbuslikovAI@ya.ru` — копии всех заявок будут приходить агентству.
