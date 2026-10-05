@@ -1,0 +1,105 @@
+<!-- EmailJS template for the ticket email. Paste into EmailJS → Email Templates → Content → Edit Content → Code.
+     Variables come from dist/app.js: passenger, first_name, last_name, booking_ref, departure, return_date, travellers, total, route. -->
+<div style="margin:0;padding:0;background:#f1eee5;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f1eee5;">
+  <tr>
+    <td align="center" style="padding:28px 12px;">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#252820;color:#f1eee5;">
+        <tr>
+          <td style="padding:26px 34px 0 34px;font-family:Georgia,'Times New Roman',serif;font-size:20px;letter-spacing:4px;color:#f1eee5;">
+            BON VIAGGIO
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:9px;letter-spacing:3px;color:#c8ad7d;padding-top:4px;">BELLA VITA TRAVEL</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:22px 0 0 0;">
+            <img src="https://tsururik.github.io/Bella-Vita-Travel/assets/images/skyline.jpg" width="600" alt="Golden evening over the domes and rooftops of Rome" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:34px 34px 6px 34px;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:3px;color:#c8ad7d;">
+            A LITTLE DREAM, READY FOR TAKE-OFF
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 34px;font-family:Georgia,'Times New Roman',serif;font-size:38px;line-height:1.15;color:#f1eee5;">
+            Your Italian journey <i style="color:#c8ceb2;">begins.</i>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:14px 34px 28px 34px;font-family:Georgia,'Times New Roman',serif;font-size:20px;font-style:italic;color:#e3d7b5;">
+            Buon viaggio, {{first_name}}.
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 34px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eee9dc;color:#252820;">
+              <tr>
+                <td valign="top" style="padding:22px 22px 18px 22px;font-family:Arial,Helvetica,sans-serif;">
+                  <div style="font-family:Georgia,'Times New Roman',serif;font-size:18px;letter-spacing:2px;">BON VIAGGIO</div>
+                  <div style="font-size:9px;letter-spacing:2px;color:#7e806a;padding:3px 0 16px 0;border-bottom:1px solid #cfc9b8;">ITALIAN ESCAPE · 8 DAYS / 7 NIGHTS</div>
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px;">
+                    <tr>
+                      <td valign="top" style="padding:0 10px 12px 0;font-family:Arial,Helvetica,sans-serif;">
+                        <div style="font-size:8px;letter-spacing:2px;color:#7e806a;">PASSENGER</div>
+                        <div style="font-size:15px;font-weight:bold;padding-top:4px;">{{passenger}}</div>
+                      </td>
+                      <td valign="top" style="padding:0 0 12px 0;font-family:Arial,Helvetica,sans-serif;">
+                        <div style="font-size:8px;letter-spacing:2px;color:#7e806a;">DESTINATION</div>
+                        <div style="font-size:15px;font-weight:bold;padding-top:4px;">ITALY</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td valign="top" style="padding:0 10px 12px 0;font-family:Arial,Helvetica,sans-serif;">
+                        <div style="font-size:8px;letter-spacing:2px;color:#7e806a;">DEPARTURE</div>
+                        <div style="font-size:14px;padding-top:4px;">{{departure}}</div>
+                      </td>
+                      <td valign="top" style="padding:0 0 12px 0;font-family:Arial,Helvetica,sans-serif;">
+                        <div style="font-size:8px;letter-spacing:2px;color:#7e806a;">RETURN</div>
+                        <div style="font-size:14px;padding-top:4px;">{{return_date}}</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td valign="top" style="padding:0 10px 0 0;font-family:Arial,Helvetica,sans-serif;">
+                        <div style="font-size:8px;letter-spacing:2px;color:#7e806a;">TRAVELLERS</div>
+                        <div style="font-size:14px;padding-top:4px;">{{travellers}}</div>
+                      </td>
+                      <td valign="top" style="font-family:Arial,Helvetica,sans-serif;">
+                        <div style="font-size:8px;letter-spacing:2px;color:#7e806a;">FROM</div>
+                        <div style="font-size:14px;padding-top:4px;">{{total}}</div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td valign="middle" width="140" style="width:140px;padding:18px 14px;border-left:1px dashed #9a9f83;text-align:center;font-family:Arial,Helvetica,sans-serif;">
+                  <div style="font-size:8px;letter-spacing:2px;color:#7e806a;">STATUS</div>
+                  <div style="font-size:13px;font-weight:bold;letter-spacing:1px;color:#536748;padding:5px 0 16px 0;">CONFIRMED</div>
+                  <div style="font-size:8px;letter-spacing:2px;color:#7e806a;">BOOKING</div>
+                  <div style="font-size:13px;font-weight:bold;letter-spacing:1px;padding-top:5px;">{{booking_ref}}</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px 34px 6px 34px;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:2px;color:#c3c8b2;">
+            {{route}}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 34px 30px 34px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.7;color:#d9d9cc;">
+            3 nights in Rome · 2 nights in Florence · 2 nights in Venice.<br>
+            Transfers, flights via Vilnius, hotels with breakfast, high-speed trains and selected guided experiences are included.
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 34px 28px 34px;border-top:1px solid #3d4136;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.7;color:#a6b098;">
+            Bella Vita Travel is a student project. This ticket is a demo confirmation: no payment was taken and no real reservation was made.<br>
+            Questions? Just reply to this email.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</div>

@@ -59,3 +59,5 @@
 .split-char{display:inline-block}
 /* Confirmation: the flight path is laid out around the text in JS */
 .confirmation-flight{height:100%}
+
+#email-status{font-size:11px;color:#d9d9cc;letter-spacing:.02em}

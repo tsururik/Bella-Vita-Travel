@@ -250,7 +250,7 @@
     $('#gondola-label').textContent=riding?'BACK TO THE GRAND CANAL':'TAKE A GONDOLA RIDE';
     $('#gondola-caption').textContent=riding?'Just the water. And a little wonder.':'St Mark’s at sunrise. The lagoon at your own pace.';
   });
-  // Local demonstration only: no request, storage, payment or real reservation.
+  // No payment, storage or real reservation. The only request is the optional ticket email (email-config.js).
   const booking=$('#booking-dialog'),form=$('#booking-form');
   const dateInput=$('#preferred-date');
   const now=new Date();const localToday=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
@@ -265,7 +265,20 @@
     const n=Number($('#travellers').value);$('#booking-total').replaceChildren(document.createTextNode(`${euros(n*1650)} `));
     const small=document.createElement('small');small.textContent=`/ ${n} traveller${n>1?'s':''}`;$('#booking-total').append(small);
   });
-  $('#passenger-name').addEventListener('input',()=>$('#passenger-name').setCustomValidity(''));
+  const nameInputs=[$('#first-name'),$('#last-name')];
+  nameInputs.forEach(input=>input.addEventListener('input',()=>input.setCustomValidity('')));
+  // The ticket is emailed through EmailJS, which sends it from the agency's Yandex mailbox.
+  const emailConfig=window.BELLA_VITA_EMAIL||{};
+  const emailReady=['serviceId','templateId','publicKey'].every(key=>emailConfig[key]);
+  async function emailTicket(params) {
+    const response=await fetch('https://api.emailjs.com/api/v1.0/email/send',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({service_id:emailConfig.serviceId,template_id:emailConfig.templateId,user_id:emailConfig.publicKey,template_params:params})});
+    if(!response.ok)throw new Error(await response.text());
+  }
+  function bookingReference() {
+    const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',bytes=crypto.getRandomValues(new Uint8Array(6));
+    return 'BV-'+[...bytes].map(b=>alphabet[b%alphabet.length]).join('');
+  }
   // The trail curves under the ticket and climbs out on the right, so it never crosses the headline.
   // On narrow screens the text spans the full width, so the trail crosses mid-screen and then fades.
   function layoutConfirmationRoute(path) {
@@ -279,14 +292,26 @@
     return true;
   }
   form.addEventListener('submit',e=>{
-    e.preventDefault();const name=$('#passenger-name').value.trim();
-    if(!name){$('#passenger-name').setCustomValidity('Please enter your name.');form.reportValidity();return;}
+    e.preventDefault();
+    const [firstName,lastName]=nameInputs.map(input=>input.value.trim().replace(/\s+/g,' '));
+    nameInputs.forEach((input,i)=>input.setCustomValidity([firstName,lastName][i]?'':`Please enter your ${i?'last':'first'} name.`));
     if(!form.reportValidity())return;
+    const name=`${firstName} ${lastName}`,email=$('#email').value.trim(),reference=bookingReference();
     const date=new Date(dateInput.value+'T12:00:00Z'),returnDate=new Date(date);returnDate.setUTCDate(returnDate.getUTCDate()+7);
     const fmt=d=>d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'});
     $('#ticket-passenger').textContent=name;$('#ticket-date').textContent=fmt(date);
     const travelers=Number($('#travellers').value);
     $('#ticket-return').textContent=`RETURN ${fmt(returnDate)} · ${travelers} TRAVELLER${travelers>1?'S':''} · 8 DAYS / 7 NIGHTS`;
+    $('#ticket-ref').textContent=reference;
+    const status=$('#email-status');
+    if(emailReady){
+      status.textContent=`Sending your ticket to ${email}…`;
+      emailTicket({to_email:email,passenger:name,first_name:firstName,last_name:lastName,booking_ref:reference,
+        departure:fmt(date),return_date:fmt(returnDate),travellers:`${travelers} traveller${travelers>1?'s':''}`,total:euros(travelers*1650),
+        route:'Minsk → Vilnius → Rome → Florence → Venice → Vilnius → Minsk'})
+        .then(()=>{status.textContent=`Your ticket is on its way to ${email}.`;})
+        .catch(()=>{status.textContent=`We could not email the ticket to ${email}. Please check the address or your connection and book again.`;});
+    } else status.textContent='Demo mode: ticket email is not set up yet, so nothing was sent.';
     $('#booking-form-view').hidden=true;$('#confirmation-view').hidden=false;booking.classList.add('confirmed');booking.scrollTop=0;
     const path=$('#confirmation-route'),plane=$('#confirmation-plane');
     const trailStays=layoutConfirmationRoute(path);sampleRoute(path,plane,0);
