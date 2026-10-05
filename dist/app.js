@@ -107,6 +107,16 @@
     if (progress>.995) $$('.map-city').forEach(c => c.classList.toggle('active',c.dataset.city==='Minsk'));
   }
   drawMap(0);
+  // City titles are split into letters for a subtle staggered entrance; the heading keeps its name for screen readers.
+  $$('[data-split]').forEach(el => {
+    const textNodes=[...el.childNodes].filter(n => n.nodeType===Node.TEXT_NODE);
+    el.setAttribute('aria-label',textNodes.map(n => n.textContent).join('').trim());
+    textNodes.forEach(node => {
+      const letters=document.createDocumentFragment();
+      for (const ch of node.textContent) {const span=document.createElement('span');span.className='split-char';span.setAttribute('aria-hidden','true');span.textContent=ch;letters.append(span);}
+      node.replaceWith(letters);
+    });
+  });
   let animationContext;
   function setupMotion() {
     if (!hasGsap) {drawMap(1);return;}
@@ -115,6 +125,9 @@
       const observers=[];
       $$('.reveal').forEach(el => {
         gsap.from(el,{y:35,opacity:0,duration:1.05,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 94%',once:true}});
+      });
+      $$('[data-split]').forEach(el => {
+        gsap.from($$('.split-char',el),{yPercent:40,opacity:0,duration:1.2,ease:'power3.out',stagger:.06,scrollTrigger:{trigger:el,start:'top 90%',once:true}});
       });
       $$('.parallax-image').forEach(img => gsap.fromTo(img,{yPercent:-4},{yPercent:6,ease:'none',scrollTrigger:{trigger:img.closest('.city-scene'),start:'top bottom',end:'bottom top',scrub:true}}));
       if (innerWidth>900) {
@@ -165,17 +178,38 @@
       if(dialog.dataset.advance==='true'){delete dialog.dataset.advance;requestAnimationFrame(()=>goTo('#journey'));}
     });
   });
+  // Departure captions follow the plane: Minsk, then Vilnius once it is reached, then Roma on arrival.
+  const departureStages=[{mode:'01 — TRANSFER',city:'MINSK'},{mode:'02 — FLIGHT',city:'VILNIUS'},{mode:'03 — ITALY BEGINS',city:'ROMA'}];
+  let departureStage=-1;
+  function setDepartureStage(index) {
+    if(index===departureStage)return;
+    departureStage=index;
+    $$('.dep-city').forEach((city,i)=>city.classList.toggle('reached',i<=index));
+    $('#departure-mode').textContent=departureStages[index].mode;
+    $('#departure-city').textContent=departureStages[index].city;
+    if(hasGsap&&!reduced)gsap.fromTo('.departure-stage > *',{opacity:0,y:18},{opacity:1,y:0,duration:.6,stagger:.08,ease:'power2.out',overwrite:true});
+  }
+  function pathFractionNear(path,x,y) {
+    const length=path.getTotalLength();let best=0,distance=Infinity;
+    for(let l=0;l<=length;l+=2){const p=path.getPointAtLength(l),d=Math.hypot(p.x-x,p.y-y);if(d<distance){distance=d;best=l;}}
+    return best/length;
+  }
+  const vilniusAt=pathFractionNear($('#departure-route'),480,100);
   $('#start-journey').addEventListener('click',()=>{
     const dialog=$('#departure-dialog');
     if(hasGsap)gsap.set('.departure-content',{clearProps:'opacity,transform'});
+    departureStage=-1;setDepartureStage(0);
     openDialog(dialog);
     const path=$('#departure-route'),plane=$('#departure-plane');
     sampleRoute(path,plane,0);
-    if(reduced||!hasGsap){sampleRoute(path,plane,1);closeDialog(dialog);return;}
+    if(reduced||!hasGsap){sampleRoute(path,plane,1);setDepartureStage(2);closeDialog(dialog);return;}
     const state={p:0};
     activeTimeline=gsap.timeline({onComplete:()=>{activeTimeline=null;closeDialog(dialog);}});
-    activeTimeline.to(state,{p:1,duration:3.7,ease:'power1.inOut',onUpdate:()=>sampleRoute(path,plane,state.p)},.35)
-      .to('.departure-content',{opacity:0,y:-20,duration:.45},4.1)
+    activeTimeline.to(state,{p:1,duration:4.2,ease:'power1.inOut',onUpdate:()=>{
+        sampleRoute(path,plane,state.p);
+        setDepartureStage(state.p>=.985?2:state.p>=vilniusAt?1:0);
+      }},.35)
+      .to('.departure-content',{opacity:0,y:-20,duration:.45},4.9)
       .set('.departure-content',{clearProps:'opacity,transform'});
   });
   // Skip advances through the close handler; Escape simply dismisses.
@@ -232,6 +266,18 @@
     const small=document.createElement('small');small.textContent=`/ ${n} traveller${n>1?'s':''}`;$('#booking-total').append(small);
   });
   $('#passenger-name').addEventListener('input',()=>$('#passenger-name').setCustomValidity(''));
+  // The trail curves under the ticket and climbs out on the right, so it never crosses the headline.
+  // On narrow screens the text spans the full width, so the trail crosses mid-screen and then fades.
+  function layoutConfirmationRoute(path) {
+    const view=$('#confirmation-view'),w=view.clientWidth,h=view.clientHeight,top=view.getBoundingClientRect().top;
+    path.ownerSVGElement.setAttribute('viewBox',`0 0 ${w} ${h}`);
+    if(w<700){path.setAttribute('d',`M-80 ${h*.5} C${w*.3} ${h*.32} ${w*.6} ${h*.66} ${w+80} ${h*.36}`);return false;}
+    const contentBottom=$('.confirmation-content').getBoundingClientRect().bottom-top;
+    const ticketBottom=$('.ticket').getBoundingClientRect().bottom-top;
+    const yLeft=Math.max(h*.6,ticketBottom+40),yLow=Math.min(h-24,contentBottom+45);
+    path.setAttribute('d',`M-90 ${yLeft} C${w*.16} ${yLeft} ${w*.24} ${yLow} ${w*.5} ${yLow} C${w*.76} ${yLow} ${w*.86} ${h*.62} ${w+90} ${h*.2}`);
+    return true;
+  }
   form.addEventListener('submit',e=>{
     e.preventDefault();const name=$('#passenger-name').value.trim();
     if(!name){$('#passenger-name').setCustomValidity('Please enter your name.');form.reportValidity();return;}
@@ -242,13 +288,15 @@
     const travelers=Number($('#travellers').value);
     $('#ticket-return').textContent=`RETURN ${fmt(returnDate)} · ${travelers} TRAVELLER${travelers>1?'S':''} · 8 DAYS / 7 NIGHTS`;
     $('#booking-form-view').hidden=true;$('#confirmation-view').hidden=false;booking.classList.add('confirmed');booking.scrollTop=0;
-    const path=$('#confirmation-route'),plane=$('#confirmation-plane');sampleRoute(path,plane,0);
+    const path=$('#confirmation-route'),plane=$('#confirmation-plane');
+    const trailStays=layoutConfirmationRoute(path);sampleRoute(path,plane,0);
     if(hasGsap&&!reduced){
-      gsap.set('.confirmation-item',{opacity:0,y:20});const state={p:0};
+      gsap.set('.confirmation-item',{opacity:0,y:20});gsap.set(path,{opacity:1});const state={p:0};
       activeTimeline=gsap.timeline({onComplete:()=>{activeTimeline=null;$('#confirmation-heading').focus({preventScroll:true});}})
         .to(state,{p:1,duration:2.4,ease:'power1.inOut',onUpdate:()=>sampleRoute(path,plane,state.p)})
         .to('.confirmation-item',{opacity:1,y:0,duration:.8,stagger:.19,ease:'power2.out'},2.1)
         .fromTo('.ticket',{rotation:3,scale:.92},{rotation:-2,scale:1,duration:1,ease:'power2.out'},3.1);
+      if(!trailStays)activeTimeline.to(path,{opacity:0,duration:.8},2.1);
     } else {sampleRoute(path,plane,1);if(hasGsap)gsap.set('.confirmation-item',{clearProps:'all'});$('#confirmation-heading').focus({preventScroll:true});}
   });
   // Fine-pointer details keep the standard pointer and disappear on touch devices.
@@ -259,7 +307,16 @@
     $$('a,button').forEach(el=>{el.addEventListener('pointerenter',()=>cursor.classList.add('hover'));el.addEventListener('pointerleave',()=>cursor.classList.remove('hover'));});
     gallery.addEventListener('pointerenter',()=>{cursor.classList.add('drag');$('span',cursor).textContent='DRAG';});
     gallery.addEventListener('pointerleave',()=>{cursor.classList.remove('drag');$('span',cursor).textContent='';});
-    if(hasGsap)$$('.magnetic').forEach(b=>{b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.12,y:(e.clientY-r.top-r.height/2)*.16,duration:.4});});b.addEventListener('pointerleave',()=>gsap.to(b,{x:0,y:0,duration:.6,ease:'elastic.out(1,.5)'}));});
+    if(hasGsap)$$('.magnetic').forEach(b=>{b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.12,y:(e.clientY-r.top-r.height/2)*.16,scale:1.04,duration:.4});});b.addEventListener('pointerleave',()=>gsap.to(b,{x:0,y:0,scale:1,duration:.6,ease:'elastic.out(1,.5)'}));});
+    // Florence: the photo drifts against the cursor while the title drifts with it.
+    if(hasGsap){
+      const florence=$('#florence'),photo=$('.florence-main img'),title=$('.florence-copy h2');
+      gsap.set(photo,{scale:1.08});
+      const ease={duration:1.2,ease:'power3.out'};
+      const photoX=gsap.quickTo(photo,'x',ease),photoY=gsap.quickTo(photo,'y',ease),titleX=gsap.quickTo(title,'x',ease);
+      florence.addEventListener('pointermove',e=>{const r=florence.getBoundingClientRect(),dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;photoX(dx*-28);photoY(dy*-20);titleX(dx*16);});
+      florence.addEventListener('pointerleave',()=>{photoX(0);photoY(0);titleX(0);});
+    }
   }
   // Optional agent-readable itinerary, supported browsers only; never submits a booking.
   const modelContext = document.modelContext;
