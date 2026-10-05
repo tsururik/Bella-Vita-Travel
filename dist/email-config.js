@@ -3,6 +3,6 @@
 // While any value is empty, booking works as a local demo and no email is sent.
 window.BELLA_VITA_EMAIL = {
   serviceId: 'bella_vita',
-  templateId: 'template_7g7gkcn',
+  templateId: 'template_xc2ufp4',
   publicKey: 'jbG2SLZar9i3z0xJ8'
 };
