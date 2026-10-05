@@ -301,7 +301,7 @@
     const fmt=d=>d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'});
     $('#ticket-passenger').textContent=name;$('#ticket-date').textContent=fmt(date);
     const travelers=Number($('#travellers').value);
-    $('#ticket-return').textContent=`RETURN ${fmt(returnDate)} · ${travelers} TRAVELLER${travelers>1?'S':''} · 8 DAYS / 7 NIGHTS`;
+    $('#ticket-return').textContent=fmt(returnDate);$('#ticket-travellers').textContent=`${travelers} TRAVELLER${travelers>1?'S':''}`;
     $('#ticket-ref').textContent=reference;
     const status=$('#email-status');
     if(emailReady){

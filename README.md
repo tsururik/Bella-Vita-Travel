@@ -36,6 +36,7 @@ python3 -m http.server 4173 --directory dist
 - `dist/credits.html` и `PHOTO-SOURCES.json` — авторы, источники и лицензии фотографий.
 - `dist/email-config.js` — ключи EmailJS для отправки билета на почту (см. «Почта»).
 - `email/ticket-template.html` — HTML-шаблон письма с билетом для EmailJS.
+- `dist/assets/ticket/` — рисунок городка, самолёт, штрихкод и оливковая ветвь для билета; вырезаны из шаблона билета, используются на сайте и в письме.
 - `server.mjs` — простой сервер без зависимостей.
 - `.openai/hosting.json` — настройки размещения Sites.
 
